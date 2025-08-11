@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -13,14 +12,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name="Investor")
-public class Investor_Entity {
+public class Investor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer investor_id;
 
-    private String investor_name;
-    private String investor_email;
-    private String investor_phoneNumber;
-    private String investor_panNumber;
-    private LocalDate investor_createdDate;
+    private String name;
+    private String email;
+    private String phoneNumber;
+    private String panNumber;
+    private LocalDate createdDate;
 }
