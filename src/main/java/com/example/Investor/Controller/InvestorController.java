@@ -1,6 +1,7 @@
 package com.example.Investor.Controller;
 
 import com.example.Investor.DTO.InvestorDTO;
+import com.example.Investor.DTO.InvestorRequest;
 import com.example.Investor.Service.InvestorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,9 @@ public class InvestorController {
     private final InvestorService investorService;
 
     @PostMapping
-    public ResponseEntity<InvestorDTO> postInvestor(@Valid @RequestBody InvestorDTO investorDto){
-         InvestorDTO savedDTO=investorService.postInvestorService(investorDto);
-         return ResponseEntity.status(HttpStatus.CREATED).body(savedDTO);
+    public ResponseEntity<InvestorRequest> postInvestor(@Valid @RequestBody InvestorRequest investorRequest){
+         InvestorRequest savedRequest=investorService.postInvestorService(investorRequest);
+         return ResponseEntity.status(HttpStatus.CREATED).body(savedRequest);
     }
 
     @GetMapping
@@ -39,8 +40,8 @@ public class InvestorController {
 
     @PatchMapping("{id}")
     public void updateInvestor(@PathVariable("id") Integer id,
-                                @RequestBody InvestorDTO investorDTO){
-        investorService.updateInvestorService(id,investorDTO);
+                                @RequestBody InvestorRequest investorRequest){
+        investorService.updateInvestorService(id,investorRequest);
 
     }
     @DeleteMapping("{id}")

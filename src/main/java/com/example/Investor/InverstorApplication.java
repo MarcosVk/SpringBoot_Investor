@@ -9,5 +9,4 @@ public class InverstorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InverstorApplication.class, args);
 	}
-
 }

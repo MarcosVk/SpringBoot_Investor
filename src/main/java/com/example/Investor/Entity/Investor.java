@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,4 +23,7 @@ public class Investor {
     private String phoneNumber;
     private String panNumber;
     private LocalDate createdDate;
+
+    @OneToMany(mappedBy = "investor",cascade = CascadeType.ALL)
+    List<Portfolio> portfolios;
 }

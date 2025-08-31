@@ -1,6 +1,5 @@
 package com.example.Investor.DTO;
 
-import com.example.Investor.Entity.Portfolio;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,14 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
-
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class InvestorDTO {
-    private Integer investor_id;
+@NoArgsConstructor
+public class InvestorRequest {
     @NotBlank(message = "Name is required")
     private String name;
     @Email(message="Invalid email format")
@@ -30,6 +26,4 @@ public class InvestorDTO {
     @NotBlank(message = "PAN Number is required")
     private String panNumber;
     private LocalDate createdDate;
-    private List<PortfolioDTO> portfolios;
-
 }
