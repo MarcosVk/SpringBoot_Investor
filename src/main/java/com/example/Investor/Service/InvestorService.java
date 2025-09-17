@@ -2,9 +2,7 @@ package com.example.Investor.Service;
 
 import com.example.Investor.DTO.InvestorDTO;
 import com.example.Investor.DTO.InvestorRequest;
-import com.example.Investor.DTO.PortfolioDTO;
 import com.example.Investor.Entity.Investor;
-import com.example.Investor.Entity.Portfolio;
 import com.example.Investor.Exception.ResourceNotFoundException;
 import com.example.Investor.Mapper.InvestorMapper;
 import com.example.Investor.Repository.InvestorRepository;

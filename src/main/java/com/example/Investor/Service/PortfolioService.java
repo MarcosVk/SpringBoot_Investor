@@ -1,13 +1,10 @@
 package com.example.Investor.Service;
 
-import com.example.Investor.DTO.InvestorDTO;
 import com.example.Investor.DTO.PortfolioDTO;
 import com.example.Investor.DTO.PortfolioRequest;
-import com.example.Investor.Entity.Investor;
 import com.example.Investor.Entity.Portfolio;
 import com.example.Investor.Exception.ResourceNotFoundException;
 import com.example.Investor.Mapper.PortfolioMapper;
-import com.example.Investor.Repository.InvestorRepository;
 import com.example.Investor.Repository.PortfolioRepository;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;

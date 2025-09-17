@@ -4,12 +4,10 @@ import com.example.Investor.DTO.InvestorDTO;
 import com.example.Investor.DTO.InvestorRequest;
 import com.example.Investor.DTO.PortfolioDTO;
 import com.example.Investor.Entity.Investor;
-import com.example.Investor.Entity.Portfolio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +19,6 @@ public class InvestorMapper {
         entity.setEmail(investorRequest.getEmail());
         entity.setPhoneNumber(investorRequest.getPhoneNumber());
         entity.setPanNumber(investorRequest.getPanNumber());
-        entity.setCreatedDate(investorRequest.getCreatedDate());
         return entity;
     }
     public InvestorRequest ConvertEntityToRequest(Investor investorEntity){
@@ -30,7 +27,6 @@ public class InvestorMapper {
         investorRequest.setEmail(investorEntity.getEmail());
         investorRequest.setPhoneNumber(investorEntity.getPhoneNumber());
         investorRequest.setPanNumber(investorEntity.getPanNumber());
-        investorRequest.setCreatedDate(investorEntity.getCreatedDate());
         return investorRequest;
     }
     public InvestorDTO ConvertEntityToDTO(Investor investor){

@@ -25,5 +25,4 @@ public class InvestorRequest {
     private String phoneNumber;
     @NotBlank(message = "PAN Number is required")
     private String panNumber;
-    private LocalDate createdDate;
 }

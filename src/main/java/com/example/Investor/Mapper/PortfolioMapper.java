@@ -1,6 +1,5 @@
 package com.example.Investor.Mapper;
 
-import com.example.Investor.DTO.InvestorDTO;
 import com.example.Investor.DTO.PortfolioDTO;
 import com.example.Investor.DTO.PortfolioRequest;
 import com.example.Investor.Entity.Investor;

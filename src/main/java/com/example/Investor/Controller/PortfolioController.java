@@ -29,7 +29,7 @@ public class PortfolioController {
     }
     @GetMapping
     public Page<PortfolioDTO> GetPortfolios(
-            @PageableDefault(size = 10,direction = Sort.Direction.ASC) Pageable pageable){
+            @PageableDefault(size = 10,sort = "name", direction = Sort.Direction.ASC) Pageable pageable){
         return service.GetPortfoliosService(pageable);
     }
     @GetMapping("{id}")
