@@ -22,7 +22,7 @@ public class TransactionsDTO {
     private String type;
     @NotNull(message="Amount cannot be null")
     @Positive(message = "Amount must be positive")
-    private double amount;
+    private Double amount;
 
     private Integer portfolio_id;
     private String portfolio_name;

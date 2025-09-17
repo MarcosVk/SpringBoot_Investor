@@ -30,6 +30,7 @@ public class InvestorService {
         LocalDate createdDate=LocalDate.now();
         investorEntity.setCreatedDate(createdDate);
         Investor savedInvestor= investorRepository.save(investorEntity);
+        log.info("Created Investor: {} sucessfully",investorRequest.getName());
         return mapper.ConvertEntityToRequest(savedInvestor);
     }
     public Page<InvestorDTO> getInvestorsService(Pageable pageable){
@@ -42,32 +43,46 @@ public class InvestorService {
         return mapper.ConvertEntityToDTO(entity);
     }
     @Transactional
-    public void updateInvestorService(Integer id,InvestorRequest investorRequest){
+    public InvestorRequest updateInvestorService(Integer id,InvestorRequest investorRequest){
         log.info("Updating investor: {}", investorRequest.getName());
         Investor investorEntity=investorRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Investor not found: "+id));
+        boolean isUpdated=false;
         if(StringUtils.isNotBlank(investorRequest.getName())) {
             if (!(investorEntity.getName().equals(investorRequest.getName()))) {
                 investorEntity.setName(investorRequest.getName());
+                isUpdated=true;
             }
         }
         if(StringUtils.isNotBlank(investorRequest.getEmail())) {
             if (!(investorEntity.getEmail().equals(investorRequest.getEmail()))) {
                 investorEntity.setEmail(investorRequest.getEmail());
+                isUpdated=true;
             }
         }
         if(StringUtils.isNotBlank(investorRequest.getPhoneNumber())) {
             if (!(investorEntity.getPhoneNumber().equals(investorRequest.getPhoneNumber()))) {
                 investorEntity.setPhoneNumber(investorRequest.getPhoneNumber());
+                isUpdated=true;
             }
         }
         if(StringUtils.isNotBlank(investorRequest.getPanNumber())){
             if(!(investorEntity.getPanNumber().equals(investorRequest.getPanNumber()))){
                 investorEntity.setPanNumber(investorRequest.getPanNumber());
+                isUpdated=true;
             }
+        }
+        if(isUpdated){
+            Investor updatedInvestor=investorRepository.save(investorEntity);
+            log.info("Investor with ID: {} updated successfully", id);
+            return mapper.ConvertEntityToRequest(updatedInvestor);
+        }else{
+            log.info("No changes detected for investor with ID: {}", id);
+            return mapper.ConvertEntityToRequest(investorEntity);
         }
     }
     public void deleteInvestorService(Integer id){
         investorRepository.deleteById(id);
+        log.info("Deleted Investor sucessfully...");
     }
 }

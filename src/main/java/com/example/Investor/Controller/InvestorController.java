@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "api/v1/investor")
+@RequestMapping(path = "/api/v1/investor")
 public class InvestorController {
 
     private final InvestorService investorService;
@@ -28,24 +28,25 @@ public class InvestorController {
     }
 
     @GetMapping
-    public Page<InvestorDTO> getInvestors(@PageableDefault(size = 10,sort="name",direction = Sort.Direction.ASC)
+    public ResponseEntity<Page<InvestorDTO>> getInvestors(@PageableDefault(size = 10,sort="name",direction = Sort.Direction.ASC)
                                           Pageable pageable){
-        return investorService.getInvestorsService(pageable);
+        return ResponseEntity.ok(investorService.getInvestorsService(pageable));
     }
 
     @GetMapping("{id}")
-    public InvestorDTO getInvestor(@PathVariable("id") Integer id){
-        return investorService.getInvestorService(id);
+    public ResponseEntity<InvestorDTO> getInvestor(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(investorService.getInvestorService(id));
     }
 
     @PatchMapping("{id}")
-    public void updateInvestor(@PathVariable("id") Integer id,
+    public ResponseEntity<InvestorRequest> updateInvestor(@PathVariable("id") Integer id,
                                 @RequestBody InvestorRequest investorRequest){
-        investorService.updateInvestorService(id,investorRequest);
+        return ResponseEntity.ok(investorService.updateInvestorService(id,investorRequest));
 
     }
     @DeleteMapping("{id}")
-    public void deleteInvestor(@PathVariable("id") Integer id){
+    public ResponseEntity<Void> deleteInvestor(@PathVariable("id") Integer id){
         investorService.deleteInvestorService(id);
+        return ResponseEntity.noContent().build();
     }
 }

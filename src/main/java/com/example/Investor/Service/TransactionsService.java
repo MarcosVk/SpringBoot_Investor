@@ -36,6 +36,7 @@ public class TransactionsService {
         LocalDate currentDate=LocalDate.now();
         transactions.setDate(currentDate);
         Transactions savedTransactions=transactionsrepository.save(transactions);
+        log.info("Created transaction sucessfully for portfolio {}",portfolio.getName());
         return transactionsMapper.EntityToRequest(savedTransactions);
     }
     public Page<TransactionsDTO> GetTransactionsService(Pageable pageable){

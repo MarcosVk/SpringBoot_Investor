@@ -19,7 +19,7 @@ public class Transactions {
 
     private LocalDate date;
     private String type;
-    private double amount;
+    private Double amount;
 
     @ManyToOne
     @JoinColumn(name="portfolio_id")

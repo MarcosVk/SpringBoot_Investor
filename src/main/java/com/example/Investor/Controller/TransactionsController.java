@@ -3,6 +3,7 @@ package com.example.Investor.Controller;
 import com.example.Investor.DTO.TransactionsDTO;
 import com.example.Investor.DTO.TransactionsRequest;
 import com.example.Investor.Service.TransactionsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,19 +21,19 @@ public class TransactionsController {
 
     @PostMapping("/portfolio/{portfolioId}")
     public ResponseEntity<TransactionsRequest> PostTransactions(
-            @PathVariable("portfolioId") Integer id, @RequestBody TransactionsRequest transactionsRequest){
+            @PathVariable("portfolioId") Integer id,@Valid @RequestBody TransactionsRequest transactionsRequest){
         TransactionsRequest request=transactionsService.PostTransactionService(id,transactionsRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(request);
     }
     @GetMapping
-    public Page<TransactionsDTO> GetTransactions(
+    public ResponseEntity<Page<TransactionsDTO>> GetTransactions(
             @PageableDefault(size = 10,sort = "date",direction = Sort.Direction.ASC) Pageable pageable){
-        return transactionsService.GetTransactionsService(pageable);
+        return ResponseEntity.ok(transactionsService.GetTransactionsService(pageable));
     }
     @GetMapping("/portfolio/{portfolioId}")
-    public Page<TransactionsDTO> GetTransactionsByPortfolio(
+    public ResponseEntity<Page<TransactionsDTO>> GetTransactionsByPortfolio(
             @PathVariable("portfolioId") Integer id,@PageableDefault(size = 10,sort = "date",direction = Sort.Direction.ASC) Pageable pageable){
-        return transactionsService.GetTransactionsByPortfolioService(id,pageable);
+        return ResponseEntity.ok(transactionsService.GetTransactionsByPortfolioService(id,pageable));
     }
 
 }

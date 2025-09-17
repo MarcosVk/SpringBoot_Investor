@@ -3,6 +3,7 @@ package com.example.Investor.Controller;
 import com.example.Investor.DTO.PortfolioDTO;
 import com.example.Investor.DTO.PortfolioRequest;
 import com.example.Investor.Service.PortfolioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,26 +19,27 @@ import org.springframework.web.bind.annotation.*;
 public class PortfolioController {
     private final PortfolioService service;
     @PostMapping
-    public ResponseEntity<PortfolioRequest> PostPortfolio(@RequestBody PortfolioRequest request){
+    public ResponseEntity<PortfolioRequest> PostPortfolio(@Valid @RequestBody PortfolioRequest request){
         PortfolioRequest portfolioRequest=service.PostPortfolioService(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(portfolioRequest);
     }
     @PatchMapping("{id}")
-    public void UpdatePortfolio(@PathVariable("id") Integer id,
+    public ResponseEntity<PortfolioRequest> UpdatePortfolio(@PathVariable("id") Integer id,
                                 @RequestBody PortfolioRequest request){
-        service.UpdatePortfolioService(id,request);
+        return ResponseEntity.ok(service.UpdatePortfolioService(id,request));
     }
     @GetMapping
-    public Page<PortfolioDTO> GetPortfolios(
+    public ResponseEntity<Page<PortfolioDTO>> GetPortfolios(
             @PageableDefault(size = 10,sort = "name", direction = Sort.Direction.ASC) Pageable pageable){
-        return service.GetPortfoliosService(pageable);
+        return ResponseEntity.ok(service.GetPortfoliosService(pageable));
     }
     @GetMapping("{id}")
-    public PortfolioDTO GetPortfolio(@PathVariable("id")Integer id){
-        return service.GetPortfolioService(id);
+    public ResponseEntity<PortfolioDTO> GetPortfolio(@PathVariable("id")Integer id){
+        return ResponseEntity.ok(service.GetPortfolioService(id));
     }
     @DeleteMapping("{id}")
-    public void DeletePortfolio(@PathVariable("id")Integer id){
+    public ResponseEntity<Void> DeletePortfolio(@PathVariable("id")Integer id){
          service.DeletePortfolioService(id);
+         return ResponseEntity.noContent().build();
     }
 }

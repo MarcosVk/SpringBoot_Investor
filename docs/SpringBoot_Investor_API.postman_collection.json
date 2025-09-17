@@ -1,0 +1,31 @@
+{
+	"info": {
+		"_postman_id": "dcec98e5-5e51-44e1-b74d-0d9c63f808de",
+		"name": "SpringBoot_Investor_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20825415"
+	},
+	"item": [
+		{
+			"name": "Investor API",
+			"item": []
+		},
+		{
+			"name": "Portfolio API",
+			"item": [
+				{
+					"name": "DELETE Portfolio",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction API",
+			"item": []
+		}
+	]
+}

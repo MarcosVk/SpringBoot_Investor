@@ -26,27 +26,40 @@ public class PortfolioService {
         log.info("Creating portfolio {}",request.getName());
         Portfolio portfolio=portfolioMapper.PortfolioReqToEntity(request);
         Portfolio savedPortfolio=portfolioRepository.save(portfolio);
+        log.info("Created portfolio: {} sucessfully",request.getName());
         return portfolioMapper.EntityToPortfolioReq(savedPortfolio);
     }
     @Transactional
-    public void UpdatePortfolioService(Integer id,PortfolioRequest request){
+    public PortfolioRequest UpdatePortfolioService(Integer id,PortfolioRequest request){
         log.info("Updating portfolio {}", request.getName());
         Portfolio portfolio=portfolioRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Portfolio not found: "+id));
+        boolean isUpdated=false;
         if(StringUtils.isNotBlank(request.getName())){
             if(!request.getName().equals(portfolio.getName())){
                 portfolio.setName(request.getName());
+                isUpdated=true;
             }
         }
         if(StringUtils.isNotBlank(request.getType())){
             if(!request.getType().equals(portfolio.getType())){
                 portfolio.setType(request.getType());
+                isUpdated=true;
             }
         }
         if(request.getValue()!=null){
             if(!request.getValue().equals(portfolio.getValue())){
                 portfolio.setValue(request.getValue());
+                isUpdated=true;
             }
+        }
+        if(isUpdated){
+            Portfolio UpdatedPortfolio=portfolioRepository.save(portfolio);
+            log.info("Portfolio with ID: {} updated successfully", id);
+            return portfolioMapper.EntityToPortfolioReq(UpdatedPortfolio);
+        }else{
+            log.info("No changes detected for portfolio with ID: {}", id);
+            return portfolioMapper.EntityToPortfolioReq(portfolio);
         }
     }
     public Page<PortfolioDTO> GetPortfoliosService(Pageable pageable){
@@ -59,5 +72,6 @@ public class PortfolioService {
     }
     public void DeletePortfolioService(Integer id){
         portfolioRepository.deleteById(id);
+        log.info("Deleted Portfolio sucessfully...");
     }
 }
