@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class TransactionsMapper {
 
     public Transactions RequestToEntity(TransactionsRequest request){

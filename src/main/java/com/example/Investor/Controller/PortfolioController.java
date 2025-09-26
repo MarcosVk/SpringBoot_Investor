@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/portfolio")
+@RequestMapping("/api/v1/portfolio")
 @RequiredArgsConstructor
 public class PortfolioController {
     private final PortfolioService service;
