@@ -3,9 +3,11 @@ package com.example.Investor.Service;
 import com.example.Investor.DTO.InvestorDTO;
 import com.example.Investor.DTO.InvestorRequest;
 import com.example.Investor.Entity.Investor;
+import com.example.Investor.Entity.UserEntity;
 import com.example.Investor.Exception.ResourceNotFoundException;
 import com.example.Investor.Mapper.InvestorMapper;
 import com.example.Investor.Repository.InvestorRepository;
+import com.example.Investor.Util.AuthUtil;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
@@ -22,9 +25,10 @@ import java.time.LocalDate;
 public class InvestorService {
     private final InvestorRepository investorRepository;
     private final InvestorMapper mapper;
+    private final AuthUtil authUtil;
     private static final Logger log= LoggerFactory.getLogger(InvestorService.class);
 
-    public InvestorRequest postInvestorService(InvestorRequest investorRequest){
+    public InvestorRequest postInvestorService(InvestorRequest investorRequest) throws AccessDeniedException {
         log.info("Creating investor: {}", investorRequest.getName());
         Investor investorEntity = mapper.ConvertRequestToEntity(investorRequest);
         LocalDate createdDate=LocalDate.now();
@@ -43,10 +47,14 @@ public class InvestorService {
         return mapper.ConvertEntityToDTO(entity);
     }
     @Transactional
-    public InvestorRequest updateInvestorService(Integer id,InvestorRequest investorRequest){
+    public InvestorRequest updateInvestorService(Integer id,InvestorRequest investorRequest) throws AccessDeniedException {
         log.info("Updating investor: {}", investorRequest.getName());
         Investor investorEntity=investorRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Investor not found: "+id));
+        UserEntity currentUser=authUtil.getCurrentUser();
+        if(!currentUser.getId().equals(investorEntity.getUserEntity().getId()) && !currentUser.hasRole("ADMIN")){
+            throw new AccessDeniedException("Not allowed to update this investor");
+        }
         boolean isUpdated=false;
         if(StringUtils.isNotBlank(investorRequest.getName())) {
             if (!(investorEntity.getName().equals(investorRequest.getName()))) {
@@ -81,7 +89,13 @@ public class InvestorService {
             return mapper.ConvertEntityToRequest(investorEntity);
         }
     }
-    public void deleteInvestorService(Integer id){
+    public void deleteInvestorService(Integer id) throws AccessDeniedException {
+        Investor investor=investorRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Investor not found: "+id));
+        UserEntity currentUser=authUtil.getCurrentUser();
+        if(!currentUser.getId().equals(investor.getUserEntity().getId()) && !currentUser.hasRole("ADMIN")){
+            throw new AccessDeniedException("Not allowed to delete this investor");
+        }
         investorRepository.deleteById(id);
         log.info("Deleted Investor sucessfully...");
     }

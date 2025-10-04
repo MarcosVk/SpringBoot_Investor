@@ -5,14 +5,17 @@ Built with Spring Boot, JPA, MySQL.
 
 ## Features
 - Investor CRUD
-- Portfolio CRUD
-- Transactions (add/list by portfolio)
+- Portfolio linked to Investor
+- Transactions linked to Portfolio
+- JWT Authentication with Roles
 
 ## Tech Stack
-- Spring Boot 3
-- Spring Data JPA
+- Spring Boot
+- Spring Security (JWT)
 - MySQL
+- JPA / Hibernate
 - Lombok
+- JUnit + MockMvc
 
 ## How to Run
 1. Clone repo

@@ -3,6 +3,7 @@ package com.example.Investor.Service;
 import com.example.Investor.DTO.AuthRequest;
 import com.example.Investor.DTO.AuthResponse;
 import com.example.Investor.DTO.RegisterRequest;
+import com.example.Investor.DTO.UserDTO;
 import com.example.Investor.Entity.Role;
 import com.example.Investor.Entity.UserEntity;
 import com.example.Investor.Exception.ResourceNotFoundException;
@@ -11,6 +12,8 @@ import com.example.Investor.Repository.RoleRepository;
 import com.example.Investor.Repository.UserRepository;
 import com.example.Investor.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,5 +57,9 @@ public class AuthService {
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(entity);
         return userMapper.toRegisterRequest(entity);
+    }
+    public Page<UserDTO> getAllUsers(Pageable pageable){
+        return userRepository.findAll(pageable)
+                .map(userMapper::toUserDTO);
     }
 }

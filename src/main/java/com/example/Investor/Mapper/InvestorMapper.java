@@ -4,21 +4,27 @@ import com.example.Investor.DTO.InvestorDTO;
 import com.example.Investor.DTO.InvestorRequest;
 import com.example.Investor.DTO.PortfolioDTO;
 import com.example.Investor.Entity.Investor;
+import com.example.Investor.Entity.UserEntity;
+import com.example.Investor.Util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class InvestorMapper {
     private final PortfolioMapper portfolioMapper;
-    public Investor ConvertRequestToEntity(InvestorRequest investorRequest){
+    private final AuthUtil authUtil;
+    public Investor ConvertRequestToEntity(InvestorRequest investorRequest) throws AccessDeniedException {
         Investor entity=new Investor();
         entity.setName(investorRequest.getName());
         entity.setEmail(investorRequest.getEmail());
         entity.setPhoneNumber(investorRequest.getPhoneNumber());
         entity.setPanNumber(investorRequest.getPanNumber());
+        UserEntity currentUser=authUtil.getCurrentUser();
+        entity.setUserEntity(currentUser);
         return entity;
     }
     public InvestorRequest ConvertEntityToRequest(Investor investorEntity){

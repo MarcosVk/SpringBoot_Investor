@@ -4,10 +4,12 @@ import com.example.Investor.DTO.TransactionsDTO;
 import com.example.Investor.DTO.TransactionsRequest;
 import com.example.Investor.Entity.Portfolio;
 import com.example.Investor.Entity.Transactions;
+import com.example.Investor.Entity.UserEntity;
 import com.example.Investor.Exception.ResourceNotFoundException;
 import com.example.Investor.Mapper.TransactionsMapper;
 import com.example.Investor.Repository.PortfolioRepository;
 import com.example.Investor.Repository.TransactionsRepository;
+import com.example.Investor.Util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 
 
@@ -24,13 +27,19 @@ public class TransactionsService {
     private final TransactionsRepository transactionsrepository;
     private final PortfolioRepository portfolioRepository;
     private final TransactionsMapper transactionsMapper;
+    private final AuthUtil authUtil;
 
     private static final Logger log= LoggerFactory.getLogger(TransactionsService.class);
 
-    public TransactionsRequest PostTransactionService(Integer id,TransactionsRequest request){
+    public TransactionsRequest PostTransactionService(Integer id,TransactionsRequest request) throws AccessDeniedException {
         log.info("Making a transaction....!");
         Portfolio portfolio=portfolioRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Portfolio not found: "+id));
+        UserEntity currentUser = authUtil.getCurrentUser();
+        if (!currentUser.getId().equals(portfolio.getInvestor().getUserEntity().getId())
+                && !currentUser.hasRole("ADMIN")) {
+            throw new AccessDeniedException("You are not allowed to add transactions for this portfolio");
+        }
         Transactions transactions=transactionsMapper.RequestToEntity(request);
         transactions.setPortfolio(portfolio);
         LocalDate currentDate=LocalDate.now();

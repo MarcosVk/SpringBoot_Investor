@@ -35,4 +35,13 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.badRequest().body(errorResponse);
     }
+    @ExceptionHandler(JwtAuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleJwtAuthenticationException(JwtAuthenticationException ex){
+        ErrorResponse errorResponse=ErrorResponse.create(
+                "Invalid or expired JWT token",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
 }

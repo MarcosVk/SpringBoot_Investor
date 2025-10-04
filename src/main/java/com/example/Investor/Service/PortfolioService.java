@@ -3,9 +3,11 @@ package com.example.Investor.Service;
 import com.example.Investor.DTO.PortfolioDTO;
 import com.example.Investor.DTO.PortfolioRequest;
 import com.example.Investor.Entity.Portfolio;
+import com.example.Investor.Entity.UserEntity;
 import com.example.Investor.Exception.ResourceNotFoundException;
 import com.example.Investor.Mapper.PortfolioMapper;
 import com.example.Investor.Repository.PortfolioRepository;
+import com.example.Investor.Util.AuthUtil;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,11 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
+
 @Service
 @RequiredArgsConstructor
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final PortfolioMapper portfolioMapper;
+    private final AuthUtil authUtil;
     private static final Logger log= LoggerFactory.getLogger(PortfolioService.class);
 
     public PortfolioRequest PostPortfolioService(PortfolioRequest request){
@@ -30,10 +35,14 @@ public class PortfolioService {
         return portfolioMapper.EntityToPortfolioReq(savedPortfolio);
     }
     @Transactional
-    public PortfolioRequest UpdatePortfolioService(Integer id,PortfolioRequest request){
+    public PortfolioRequest UpdatePortfolioService(Integer id,PortfolioRequest request) throws AccessDeniedException {
         log.info("Updating portfolio {}", request.getName());
         Portfolio portfolio=portfolioRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Portfolio not found: "+id));
+                .orElseThrow(()->new ResourceNotFoundException("Portfolio not found: "+id));
+        UserEntity currentUser=authUtil.getCurrentUser();
+        if(!currentUser.getId().equals(portfolio.getInvestor().getUserEntity().getId()) && !currentUser.hasRole("ADMIN")){
+            throw new AccessDeniedException("Not allowed to update this portfolio");
+        }
         boolean isUpdated=false;
         if(StringUtils.isNotBlank(request.getName())){
             if(!request.getName().equals(portfolio.getName())){
@@ -70,7 +79,13 @@ public class PortfolioService {
                 .orElseThrow(()-> new ResourceNotFoundException("Portfolio not found: "+id));
         return portfolioMapper.EntityToPortfolioDTO(portfolio);
     }
-    public void DeletePortfolioService(Integer id){
+    public void DeletePortfolioService(Integer id) throws AccessDeniedException {
+        Portfolio portfolio=portfolioRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Portfolio not found: "+id));
+        UserEntity currentUser=authUtil.getCurrentUser();
+        if(!currentUser.getId().equals(portfolio.getInvestor().getUserEntity().getId()) && !currentUser.hasRole("ADMIN")){
+            throw new AccessDeniedException("Not allowed to delete this portfolio");
+        }
         portfolioRepository.deleteById(id);
         log.info("Deleted Portfolio sucessfully...");
     }

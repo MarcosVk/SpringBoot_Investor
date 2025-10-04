@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="user")
+@Table(name="users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +30,8 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles=new HashSet<>();
+
+    public boolean hasRole(String roleName){
+        return roles.stream().anyMatch(role->role.getName().equalsIgnoreCase(roleName));
+    }
 }
