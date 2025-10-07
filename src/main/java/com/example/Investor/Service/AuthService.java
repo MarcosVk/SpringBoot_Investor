@@ -12,6 +12,8 @@ import com.example.Investor.Repository.RoleRepository;
 import com.example.Investor.Repository.UserRepository;
 import com.example.Investor.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +34,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private static final Logger log= LoggerFactory.getLogger(AuthService.class);
 
     public AuthResponse PostUserService(AuthRequest authRequest){
         Authentication authentication=authenticationManager.authenticate(
@@ -39,9 +42,11 @@ public class AuthService {
         );
         UserDetails userDetails=(UserDetails)authentication.getPrincipal();
         String generatedToken=jwtTokenProvider.generateToken(userDetails);
+        log.info("Token generated successfully: {}",generatedToken);
         return new AuthResponse(generatedToken);
     }
     public RegisterRequest PostRegisterService(RegisterRequest request,Boolean IsAdmin){
+        log.info("Registering User: {}",request.getUsername());
         UserEntity entity=userMapper.toUserEntity(request);
 
         Role investorRole;
@@ -56,6 +61,7 @@ public class AuthService {
         entity.setRoles(Set.of(investorRole));
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(entity);
+        log.info("User {} registered successfully",request.getUsername());
         return userMapper.toRegisterRequest(entity);
     }
     public Page<UserDTO> getAllUsers(Pageable pageable){

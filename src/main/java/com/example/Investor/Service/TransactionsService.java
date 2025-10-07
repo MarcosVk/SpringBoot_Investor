@@ -28,7 +28,6 @@ public class TransactionsService {
     private final PortfolioRepository portfolioRepository;
     private final TransactionsMapper transactionsMapper;
     private final AuthUtil authUtil;
-
     private static final Logger log= LoggerFactory.getLogger(TransactionsService.class);
 
     public TransactionsRequest PostTransactionService(Integer id,TransactionsRequest request) throws AccessDeniedException {
